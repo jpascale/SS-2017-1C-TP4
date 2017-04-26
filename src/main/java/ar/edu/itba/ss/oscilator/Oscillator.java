@@ -6,9 +6,6 @@ import ar.edu.itba.ss.io.Output;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by maggie on 4/21/17.
- */
 public class Oscillator {
 
     private static double mass = 70.0;
@@ -19,7 +16,7 @@ public class Oscillator {
     private static double time;
 
     private static double x0 = 1.0;
-    private static double v0 = -gamma / (2*mass);
+    private static double v0 = -gamma / (2 * mass);
 
     private static Particle p;
 
@@ -33,7 +30,7 @@ public class Oscillator {
      static void Simulate(String filename, Type type, double deltaTime){
         Oscillator o = new Oscillator(5.0);
 
-        Particle previous = new Particle(1,1.0,mass,o.eulerPos(p,-deltaTime),o.eulerVel(p,-deltaTime));
+        Particle previous = new Particle(1,1.0, mass, o.eulerPos(p, -deltaTime), o.eulerVel(p, -deltaTime));
         p.setOldXPos(previous.getX());
         p.setOldXAcc(o.getAcel(previous));
 
@@ -43,9 +40,9 @@ public class Oscillator {
         for(double t=0.0;t<time;t+=deltaTime){
             diff += Math.pow(p.getX() - o.exactSol(t),2);
 
-            Output.printOscillator(filename,p.getX(),t);
+            Output.printOscillator(filename, p.getX(),t);
 
-            o.update(type,deltaTime);
+            o.update(type, deltaTime);
             count ++;
         }
 
@@ -66,8 +63,8 @@ public class Oscillator {
         return getForce(p) / p.getMass();
     }
 
-    private double getAcel(double x, double xspeed){
-        return getForce(x,xspeed)/mass;
+    private double getAcel(double x, double xspeed) {
+        return getForce(x, xspeed) / mass;
     }
 
     private double eulerPos(Particle p, double delta){
@@ -75,12 +72,12 @@ public class Oscillator {
     }
 
     private double eulerVel(Particle p, double delta){
-        return p.getXSpeed() + (delta*getForce(p)) / p.getMass();
+        return p.getXSpeed() + (delta * getForce(p)) / p.getMass();
     }
 
     private double exactSol(double time){
-        double aux = (k/mass)-(gamma*gamma/(4*mass*mass));
-        return Math.exp(-(gamma/(2*mass))*time)*Math.cos(Math.sqrt(aux)*time);
+        double aux = (k / mass) - (Math.pow(gamma, 2) / (4 * Math.pow(mass, 2)));
+        return Math.exp(- (gamma / (2 * mass)) * time) * Math.cos(Math.sqrt(aux) * time);
     }
 
 
@@ -100,16 +97,16 @@ public class Oscillator {
     }
 
     private void Verlet(double delta){
-        Particle next = new Particle(1,mass);
+        Particle next = new Particle(1, mass);
 
-        double nextX = p.getX() + delta * p.getXSpeed() + (delta*delta*getForce(p)/p.getMass());
+        double nextX = p.getX() + delta * p.getXSpeed() + (delta*delta*getForce(p) / p.getMass());
         next.setX(nextX);
 
-        double predXSpeed = eulerVel(p,delta);
+        double predXSpeed = eulerVel(p, delta);
 
         next.setXSpeed(predXSpeed);
 
-        double nextSpeedX = p.getXSpeed() + (delta / (2*p.getMass())) * (getForce(p) + getForce(next)) ;
+        double nextSpeedX = p.getXSpeed() + (delta / (2 * p.getMass())) * (getForce(p) + getForce(next)) ;
 
         p.setOldXPos(p.getX());
         p.setOldXAcc(p.getXAcc());
@@ -121,18 +118,18 @@ public class Oscillator {
     }
 
     private void BeeMan(double delta){
-        Particle next = new Particle(1,mass);
+        Particle next = new Particle(1, mass);
 
-        double newX = p.getX() + p.getXSpeed()*delta + (2.0/3.0)*p.getXAcc()*delta*delta - (1.0/6.0)*p.getOldXAcc()*delta*delta;
+        double newX = p.getX() + p.getXSpeed() * delta + (2.0 / 3.0) * p.getXAcc() * Math.pow(delta, 2) - (1.0 / 6.0) * p.getOldXAcc() * Math.pow(delta, 2);
         next.setX(newX);
 
         //PredictV
-        double predXSpeed = p.getXSpeed() + (3.0/2.0)*p.getXAcc()*delta -(1.0/2.0)*p.getOldXAcc()*delta;
+        double predXSpeed = p.getXSpeed() + (3.0 / 2.0) * p.getXAcc() * delta - (1.0/2.0) * p.getOldXAcc() * delta;
 
         next.setXSpeed(predXSpeed);
         next.setXAcc(getAcel(next));
 
-        double newXSpeed = p.getXSpeed() + (1.0/3.0)*next.getXAcc()*delta + (5.0/6.0)*p.getXAcc()*delta -(1.0/6.0)*p.getOldXAcc()*delta;
+        double newXSpeed = p.getXSpeed() + (1.0 / 3.0)*next.getXAcc() * delta + (5.0 / 6.0) * p.getXAcc() * delta - (1.0 / 6.0) * p.getOldXAcc() * delta;
 
         p.setOldXPos(p.getX());
         p.setOldXAcc(p.getXAcc());
@@ -153,20 +150,20 @@ public class Oscillator {
         rc = new HashMap<>();
         rp = new HashMap<>();
 
-        rc.put(0,p.getX());
-        rc.put(1,p.getXSpeed());
-        rc.put(2,getAcel(rc.get(0),rc.get(1)));
-        rc.put(3,getAcel(rc.get(1),rc.get(2)));
-        rc.put(4,getAcel(rc.get(2),rc.get(3)));
-        rc.put(5,getAcel(rc.get(3),rc.get(4)));
+        rc.put(0, p.getX());
+        rc.put(1, p.getXSpeed());
+        rc.put(2, getAcel(rc.get(0), rc.get(1)));
+        rc.put(3, getAcel(rc.get(1), rc.get(2)));
+        rc.put(4, getAcel(rc.get(2), rc.get(3)));
+        rc.put(5, getAcel(rc.get(3), rc.get(4)));
 
         //Predict
-        rp.put(0,rc.get(0) + rc.get(1)* delta + rc.get(2)*(Math.pow(delta,2)/2.0) + rc.get(3)*(Math.pow(delta,3)/6.0) + rc.get(4)*(Math.pow(delta,4)/24.0) + rc.get(5)*(Math.pow(delta,5)/120.0));
-        rp.put(1,rc.get(1)+ rc.get(2)*delta + rc.get(3)*(Math.pow(delta,2)/2.0) + rc.get(4)*(Math.pow(delta,3)/6.0) + rc.get(5)*(Math.pow(delta,4)/24.0));
-        rp.put(2,rc.get(2)+ rc.get(3)*delta + rc.get(4)*(Math.pow(delta,3)/2.0) + rc.get(5)*(Math.pow(delta,4)/6.0));
-        rp.put(3,rc.get(3)+ rc.get(4)*delta + rc.get(5)*(Math.pow(delta,3)/2.0));
-        rp.put(4,rc.get(4)+ rc.get(5)*delta);
-        rp.put(5,rc.get(5));
+        rp.put(0, rc.get(0) + rc.get(1)* delta + rc.get(2) * (Math.pow(delta, 2) / 2.0) + rc.get(3) * (Math.pow(delta, 3) / 6.0) + rc.get(4) * (Math.pow(delta, 4) / 24.0) + rc.get(5) * (Math.pow(delta, 5) / 120.0));
+        rp.put(1, rc.get(1) + rc.get(2)* delta + rc.get(3) * (Math.pow(delta, 2) / 2.0) + rc.get(4) * (Math.pow(delta, 3) / 6.0) + rc.get(5) * (Math.pow(delta, 4) / 24.0));
+        rp.put(2, rc.get(2) + rc.get(3)* delta + rc.get(4) * (Math.pow(delta, 3) / 2.0) + rc.get(5) * (Math.pow(delta, 4) / 6.0));
+        rp.put(3, rc.get(3) + rc.get(4)* delta + rc.get(5) * (Math.pow(delta, 3) / 2.0));
+        rp.put(4, rc.get(4) + rc.get(5)* delta);
+        rp.put(5, rc.get(5));
 
         //Evaluate
         deltaA = getAcel(rp.get(0),rp.get(1)) - rp.get(2);
@@ -174,11 +171,11 @@ public class Oscillator {
 
         //Correct
         rc.put(0, rp.get(0) + coef[0] * deltaR2);
-        rc.put(1, rp.get(1) + coef[1] * (deltaR2/delta));
-        rc.put(2, rp.get(2) + coef[2] * (deltaR2*2.0 / Math.pow(delta,2)));
-        rc.put(3, rp.get(3) + coef[3] * (deltaR2*6.0 / Math.pow(delta,3)));
-        rc.put(4, rp.get(4) + coef[4] * (deltaR2*24.0 / Math.pow(delta,4)));
-        rc.put(5, rp.get(5) + coef[5] * (deltaR2*120.0 / Math.pow(delta,5)));
+        rc.put(1, rp.get(1) + coef[1] * (deltaR2 / delta));
+        rc.put(2, rp.get(2) + coef[2] * (deltaR2 * 2.0 / Math.pow(delta, 2)));
+        rc.put(3, rp.get(3) + coef[3] * (deltaR2 * 6.0 / Math.pow(delta, 3)));
+        rc.put(4, rp.get(4) + coef[4] * (deltaR2 * 24.0 / Math.pow(delta, 4)));
+        rc.put(5, rp.get(5) + coef[5] * (deltaR2 * 120.0 / Math.pow(delta, 5)));
 
         //Update
         p.setX(rc.get(0));

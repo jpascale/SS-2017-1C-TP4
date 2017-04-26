@@ -21,8 +21,6 @@ public class Planet {
     private double x_speed = 0.0;
     private double y_speed = 0.0;
 
-    private double x_acc = 0.0;
-    private double y_acc = 0.0;
 
     public Planet(int id, double radius, double mass, double x, double y, double x_speed, double y_speed){
         this.id = id;
@@ -33,7 +31,7 @@ public class Planet {
         this.x_speed = x_speed;
         this.y_speed = y_speed;
     }
-    
+
     //TODO: test
     public Double getComponentForce (ArrayList<Planet> planetList, Component component) {
 
@@ -86,12 +84,52 @@ public class Planet {
         return x_pos;
     }
 
+    public void setX(double x_pos) {
+        this.x_pos = x_pos;
+    }
+
     public double getY() {
         return y_pos;
     }
 
+    public void setY(double y_pos) {
+        this.y_pos = y_pos;
+    }
+
     public double getMass() {
         return mass;
+    }
+
+    public double getOldX() {
+        return old_x_pos;
+    }
+
+    public void setOldX(double old_x_pos) {
+        this.old_x_pos = old_x_pos;
+    }
+
+    public double getOldY() {
+        return old_y_pos;
+    }
+
+    public void setOldY(double old_y_pos) {
+        this.old_y_pos = old_y_pos;
+    }
+
+    public double getXSpeed() {
+        return x_speed;
+    }
+
+    public void setXSpeed(double x_speed) {
+        this.x_speed = x_speed;
+    }
+
+    public double getYSpeed() {
+        return y_speed;
+    }
+
+    public void setYSpeed(double y_speed) {
+        this.y_speed = y_speed;
     }
 
     public enum Component {

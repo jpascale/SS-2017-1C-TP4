@@ -1,6 +1,7 @@
 package ar.edu.itba.ss.io;
 
 
+import ar.edu.itba.ss.mars.Planet;
 import ar.edu.itba.ss.oscilator.Particle;
 
 import java.io.File;
@@ -48,11 +49,11 @@ public class Output {
     }
 
 
-    public static void printSystem(List<Particle> particles, double t) {
+    public static void printSystem(List<Planet> particles, double t) {
         StringBuilder sb = new StringBuilder();
         sb.append("\t" + particles.size() + "\n");
         sb.append("\t" + "t" + "\n");
-        for(Particle p: particles){
+        for(Planet p: particles){
             sb.append("\t" + p.getX() + "\t" + p.getY() + "\t" + p.getMass() + "\n");
         }
 
