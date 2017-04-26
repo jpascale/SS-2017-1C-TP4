@@ -1,0 +1,102 @@
+package ar.edu.itba.ss.mars;
+
+import java.util.ArrayList;
+
+/**
+ * Created by maggie on 4/26/17.
+ */
+public class Planet {
+
+    private Integer id;
+
+    private double radius = 0.0;
+    private double mass = 0.0;
+
+    private double old_x_pos = 0.0;
+    private double old_y_pos = 0.0;
+
+    private double x_pos = 0.0;
+    private double y_pos = 0.0;
+
+    private double x_speed = 0.0;
+    private double y_speed = 0.0;
+
+    private double x_acc = 0.0;
+    private double y_acc = 0.0;
+
+    public Planet(int id, double radius, double mass, double x, double y, double x_speed, double y_speed){
+        this.id = id;
+        this.radius = radius;
+        this.mass = mass;
+        this.x_pos = x;
+        this.y_pos = y;
+        this.x_speed = x_speed;
+        this.y_speed = y_speed;
+    }
+    
+    //TODO: test
+    public Double getComponentForce (ArrayList<Planet> planetList, Component component) {
+
+        double c1 = 0.0;
+        double c2 = 0.0;
+
+        double sum = 0.0;
+
+        for (Planet p : planetList) {
+            if (!p.equals(this)) {
+                switch (component) {
+                    case X:
+                        c1 = this.x_pos;
+                        c2 = p.getX();
+                        break;
+
+                    case Y:
+                        c1 = this.y_pos;
+                        c2 = p.getY();
+                        break;
+                }
+
+                double force = getGravityForce(p);
+                double e = (c2 - c1) / Math.abs(getDistance(p));
+                sum += force * e;
+
+            }
+        }
+
+        return sum;
+
+    }
+
+    /**
+     * Returns the gravity force in module in the component of the distance between another planet.
+     * @param p The planet
+     * @return The gravity force
+     */
+    public Double getGravityForce(Planet p){
+            return (SpaceData.G * this.getMass() * p.getMass()) / Math.pow(getDistance(p), 2);
+    }
+
+
+
+    public Double getDistance(Planet p){
+        return Math.sqrt(Math.pow(p.getX() - this.getX(), 2) + Math.pow(p.getY() - this.getY(), 2));
+    }
+
+    public double getX() {
+        return x_pos;
+    }
+
+    public double getY() {
+        return y_pos;
+    }
+
+    public double getMass() {
+        return mass;
+    }
+
+    public enum Component {
+        X,
+        Y,
+    }
+
+}
