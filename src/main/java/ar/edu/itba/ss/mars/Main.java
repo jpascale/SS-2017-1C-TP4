@@ -11,10 +11,8 @@ public class Main {
     private static ArrayList<Planet> planets = new ArrayList<>();
     private static double deltaTime = 100; // seconds
     private static double printTime = 43200; // 12 hours in seconds
-//    private static double printTime = 60; // 12 hours in seconds
 
-//    private static double time = 31536000; // year in seconds
-    private static double time = 2592000; // 30 days in seconds
+    private static double time = 31536000; // year in seconds
 
 
     public static void main(String[] args) {
@@ -50,6 +48,7 @@ public class Main {
                 printCont++;
             }
 
+            /* Previous positions */
             ArrayList<Planet> aux  = new ArrayList<>();
             copy(aux, planets);
 
@@ -67,7 +66,7 @@ public class Main {
     }
 
     private static Double eulerPos(double pos, double speed, double force, double mass, double delta){
-        return pos + delta * speed + (Math.pow(delta,2) * force) / (2.0 * mass);
+        return pos + delta * speed - (Math.pow(delta,2) * force) / (2.0 * mass);
     }
 
     private static void setPreviousPos() {

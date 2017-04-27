@@ -1,11 +1,8 @@
 package ar.edu.itba.ss.mars;
 
-import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * Created by maggie on 4/26/17.
- */
+
 public class Planet {
 
     private Integer id;
@@ -62,7 +59,7 @@ public class Planet {
                 double force = getGravityForce(p);
                 double e = (c2 - c1) / Math.abs(getDistance(p));
                 sum += force * e;
-
+                
             }
         }
 
