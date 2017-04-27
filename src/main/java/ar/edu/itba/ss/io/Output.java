@@ -2,8 +2,10 @@ package ar.edu.itba.ss.io;
 
 
 import ar.edu.itba.ss.mars.Planet;
+import ar.edu.itba.ss.mars.SpaceData;
 import ar.edu.itba.ss.oscilator.Particle;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -48,13 +50,15 @@ public class Output {
 
     }
 
+    private static double [] radius = {SpaceData.SUN.RADIUS * 10 , SpaceData.EARTH.RADIUS * 1000, SpaceData.MARS.RADIUS * 1000};
+
 
     public static void printSystem(List<Planet> particles, double t) {
         StringBuilder sb = new StringBuilder();
         sb.append("\t" + particles.size() + "\n");
-        sb.append("\t" + "t" + "\n");
+        sb.append("\t" + t/86400 + "\n");
         for(Planet p: particles){
-            sb.append("\t" + p.getX() + "\t" + p.getY() + "\t" + p.getMass() + "\n");
+            sb.append("\t" + p.getId() + "\t" + p.getX() + "\t" + p.getY() + "\t" + radius[p.getId()]  + "\t" + p.getR() + "\t" + p.getG() + "\t" + p.getB() + "\n");
         }
 
         try {

@@ -13,6 +13,10 @@ public class SpaceData {
         final public static Double VX = 0.0;
         final public static Double VY = 0.0;
 
+        final public static Integer R = 255;
+        final public static Integer G = 255;
+        final public static Integer B = 0;
+
     }
 
 
@@ -25,6 +29,10 @@ public class SpaceData {
         final public static Double VX = 23.637912321314047;
         final public static Double VY = 11.429021426712032;
 
+        final public static Integer R = 255;
+        final public static Integer G = 0;
+        final public static Integer B = 0;
+
     }
 
     public static class EARTH {
@@ -36,6 +44,10 @@ public class SpaceData {
         final public static Double VX = 10.801963811159256;
         final public static Double VY = 27.565215006898345;
 
+        final public static Integer R = 0;
+        final public static Integer G = 0;
+        final public static Integer B = 255;
+
     }
 
   //TODO: CHANGE_POSITION
@@ -46,6 +58,10 @@ public class SpaceData {
         final public static Double MASS = 2E5;
         final public static Double VX = 1.0;
         final public static Double VY = 1.0;
+
+        final public static Integer R = 96;
+        final public static Integer G = 96;
+        final public static Integer B = 96;
 
 
         final public static Double X = 0.0;

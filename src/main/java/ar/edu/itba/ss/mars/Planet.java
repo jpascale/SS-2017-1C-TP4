@@ -1,5 +1,6 @@
 package ar.edu.itba.ss.mars;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -20,6 +21,10 @@ public class Planet {
 
     private double x_speed = 0.0;
     private double y_speed = 0.0;
+
+    private int R = 0;
+    private int G = 0;
+    private int B = 0;
 
 
     public Planet(int id, double radius, double mass, double x, double y, double x_speed, double y_speed){
@@ -71,13 +76,16 @@ public class Planet {
      * @return The gravity force
      */
     public Double getGravityForce(Planet p){
-            return (SpaceData.G * this.getMass() * p.getMass()) / Math.pow(getDistance(p), 2);
+        return (SpaceData.G * this.getMass() * p.getMass()) / Math.pow(getDistance(p), 2);
     }
-
 
 
     public Double getDistance(Planet p){
         return Math.sqrt(Math.pow(p.getX() - this.getX(), 2) + Math.pow(p.getY() - this.getY(), 2));
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public double getX() {
@@ -98,6 +106,10 @@ public class Planet {
 
     public double getMass() {
         return mass;
+    }
+
+    public double getRadius() {
+        return radius;
     }
 
     public double getOldX() {
@@ -132,9 +144,35 @@ public class Planet {
         this.y_speed = y_speed;
     }
 
+    public void setColor(int R, int G, int B){
+        this.R = R;
+        this.G = G;
+        this.B = B;
+    }
+
+    public int getR() { return this.R; }
+
+    public int getG() { return this.G; }
+
+    public int getB() { return this.B; }
+
     public enum Component {
         X,
         Y,
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Planet planet = (Planet) o;
+
+        return id != null ? id.equals(planet.id) : planet.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }
