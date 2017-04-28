@@ -50,7 +50,7 @@ public class Output {
 
     }
 
-    private static double [] radius = {SpaceData.SUN.RADIUS * 10 , SpaceData.EARTH.RADIUS * 1000, SpaceData.MARS.RADIUS * 1000};
+    private static double [] radius = {SpaceData.SUN.RADIUS * 100 , SpaceData.EARTH.RADIUS * 1000, SpaceData.MARS.RADIUS * 1000};
 
 
     public static void printSystem(List<Planet> particles, double t) {

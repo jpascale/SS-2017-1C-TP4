@@ -34,7 +34,12 @@ public class Planet {
         this.y_speed = y_speed;
     }
 
-    //TODO: test
+    public Planet(int id, double radius, double mass) {
+        this.id = id;
+        this.radius = radius;
+        this.mass = mass;
+    }
+
     public Double getComponentForce (ArrayList<Planet> planetList, Component component) {
 
         double c1 = 0.0;
@@ -79,6 +84,19 @@ public class Planet {
 
     public Double getDistance(Planet p){
         return Math.sqrt(Math.pow(p.getX() - this.getX(), 2) + Math.pow(p.getY() - this.getY(), 2));
+    }
+
+    /**
+     * Generates a deep copy of the planet
+     * @return The planet copy
+     */
+    public Planet clone(){
+        Planet newPlanet = new Planet(id, radius, mass, x_pos, y_pos, x_speed, y_speed);
+        newPlanet.setOldX(old_x_pos);
+        newPlanet.setOldY(old_y_pos);
+        newPlanet.setColor(R, G, B);
+
+        return newPlanet;
     }
 
     public Integer getId() {

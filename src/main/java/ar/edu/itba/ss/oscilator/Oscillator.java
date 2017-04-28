@@ -23,7 +23,7 @@ public class Oscillator {
 
     private Oscillator(double time){
         p = new Particle(0, 1.0, mass, x0, v0);
-        p.setXAcc(getAcel(p));
+        p.setXAcc(getAcel(p.getX(), p.getXSpeed()));
         Oscillator.time = time;
     }
 
@@ -32,7 +32,7 @@ public class Oscillator {
 
         Particle previous = new Particle(1,1.0, mass, o.eulerPos(p, -deltaTime), o.eulerVel(p, -deltaTime));
         p.setOldXPos(previous.getX());
-        p.setOldXAcc(o.getAcel(previous));
+        p.setOldXAcc(o.getAcel(previous.getX(), previous.getXSpeed()));
 
         double diff = 0.0;
         int count = 0;
@@ -51,16 +51,8 @@ public class Oscillator {
 
     }
 
-    private double getForce(Particle p){
-        return -k * p.getX() - gamma * p.getXSpeed();
-    }
-
     private double getForce(double x, double xspeed){
         return -k * x - gamma * xspeed;
-    }
-
-    private double getAcel(Particle p){
-        return getForce(p) / p.getMass();
     }
 
     private double getAcel(double x, double xspeed) {
@@ -68,11 +60,11 @@ public class Oscillator {
     }
 
     private double eulerPos(Particle p, double delta){
-        return p.getX() + delta * p.getXSpeed() + ((Math.pow(delta, 2) * getForce(p)) / 2 * p.getMass());
+        return p.getX() + delta * p.getXSpeed() + ((Math.pow(delta, 2) * getForce(p.getX(), p.getXSpeed())) / 2 * p.getMass());
     }
 
     private double eulerVel(Particle p, double delta){
-        return p.getXSpeed() + (delta * getForce(p)) / p.getMass();
+        return p.getXSpeed() + (delta * getForce(p.getX(), p.getXSpeed())) / p.getMass();
     }
 
     private double exactSol(double time){
@@ -97,51 +89,42 @@ public class Oscillator {
     }
 
     private void Verlet(double delta){
-        Particle next = new Particle(1, mass);
-
-        double nextX = p.getX() + delta * p.getXSpeed() + (delta*delta*getForce(p) / p.getMass());
-        next.setX(nextX);
+        double nextX = p.getX() + delta * p.getXSpeed() + (delta*delta*getForce(p.getX(), p.getXSpeed()) / p.getMass());
 
         double predXSpeed = eulerVel(p, delta);
 
-        next.setXSpeed(predXSpeed);
-
-        double nextSpeedX = p.getXSpeed() + (delta / (2 * p.getMass())) * (getForce(p) + getForce(next)) ;
+        double nextSpeedX = p.getXSpeed() + (delta / (2 * p.getMass())) * (getForce(p.getX(), p.getXSpeed()) + getForce(nextX, predXSpeed)) ;
 
         p.setOldXPos(p.getX());
         p.setOldXAcc(p.getXAcc());
 
-        p.setX(next.getX());
+        p.setX(nextX);
         p.setXSpeed(nextSpeedX);
-        p.setXAcc(getAcel(p));
+        p.setXAcc(getAcel(p.getX(), p.getXSpeed()));
 
     }
 
     private void BeeMan(double delta){
-        Particle next = new Particle(1, mass);
-
         double newX = p.getX() + p.getXSpeed() * delta + (2.0 / 3.0) * p.getXAcc() * Math.pow(delta, 2) - (1.0 / 6.0) * p.getOldXAcc() * Math.pow(delta, 2);
-        next.setX(newX);
 
         //PredictV
         double predXSpeed = p.getXSpeed() + (3.0 / 2.0) * p.getXAcc() * delta - (1.0/2.0) * p.getOldXAcc() * delta;
 
-        next.setXSpeed(predXSpeed);
-        next.setXAcc(getAcel(next));
+        double xAcc = getAcel(newX, predXSpeed);
 
-        double newXSpeed = p.getXSpeed() + (1.0 / 3.0)*next.getXAcc() * delta + (5.0 / 6.0) * p.getXAcc() * delta - (1.0 / 6.0) * p.getOldXAcc() * delta;
+        double newXSpeed = p.getXSpeed() + (1.0 / 3.0)* xAcc * delta + (5.0 / 6.0) * p.getXAcc() * delta - (1.0 / 6.0) * p.getOldXAcc() * delta;
 
         p.setOldXPos(p.getX());
         p.setOldXAcc(p.getXAcc());
 
-        p.setX(next.getX());
+        p.setX(newX);
         p.setXSpeed(newXSpeed);
-        p.setXAcc(next.getXAcc());
+        p.setXAcc(getAcel(newX, newXSpeed));
     }
 
     private void GearPredictor(double delta){
-        double deltaR2,deltaA;
-        double [] coef = {3.0/16.0 , 251.0/360.0 , 1.0 , 11.0/18.0 , 1.0/6.0 , 1.0/60.0};
+        double deltaR2, deltaA;
+        double [] coef = {3.0 / 16.0, 251.0 / 360.0, 1.0, 11.0 / 18.0, 1.0 / 6.0, 1.0 / 60.0};
 
         Map<Integer,Double> rp;
         Map<Integer,Double> rc;
@@ -166,8 +149,8 @@ public class Oscillator {
         rp.put(5, rc.get(5));
 
         //Evaluate
-        deltaA = getAcel(rp.get(0),rp.get(1)) - rp.get(2);
-        deltaR2 = (deltaA * Math.pow(delta,2)) / 2;
+        deltaA = getAcel(rp.get(0), rp.get(1)) - rp.get(2);
+        deltaR2 = (deltaA * Math.pow(delta, 2)) / 2;
 
         //Correct
         rc.put(0, rp.get(0) + coef[0] * deltaR2);

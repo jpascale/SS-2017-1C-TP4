@@ -2,7 +2,7 @@ package ar.edu.itba.ss.mars;
 
 public class SpaceData {
     public static final double G = 6.693E-11;
-    public static final double d = 1500.0;
+    public static final double d = 1500000.0;
 
     public static class SUN {
         final public static Integer ID = 0;
@@ -50,23 +50,14 @@ public class SpaceData {
 
     }
 
-  //TODO: CHANGE_POSITION
-
     public static class SHIP {
         final public static Integer ID = 3;
-        final public static Double RADIUS = 1.0;
+        final public static Double RADIUS = 1000.0;
         final public static Double MASS = 2E5;
-        final public static Double VX = 1000.0;
-        final public static Double VY = 1000.0;
 
-        final public static Integer R = 96;
-        final public static Integer G = 96;
-        final public static Integer B = 96;
-
-
-        final public static Double X = 0.0;
-        final public static Double Y = 0.0;
-
+        final public static Integer R = 255;
+        final public static Integer G = 255;
+        final public static Integer B = 255;
 
     }
 }
