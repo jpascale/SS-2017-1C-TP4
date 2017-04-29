@@ -47,6 +47,8 @@ public class Simulation {
                 sa.writeArrivalSpeed(planets.get(SHIP.ID).getXSpeed(), planets.get(SHIP.ID).getYSpeed());
                 sa.writeArrivalTime(t);
                 sa.writeSuccess();
+                System.out.println("LLEGO!!!");
+                System.out.println("MIN DISTANCE: " + minDistance);
                 return sa;
             }
         }
@@ -55,12 +57,12 @@ public class Simulation {
         return sa;
     }
 
-    public void updatePosition(Planet p, double delta, ArrayList<Planet> positions) {
+    public static void updatePosition(Planet p, double delta, ArrayList<Planet> positions) {
         double newX = 2.0 * p.getX() - p.getOldX() + (Math.pow(delta, 2) * p.getComponentForce(positions, Planet.Component.X)) / p.getMass();
         double newY = 2.0 * p.getY() - p.getOldY() + (Math.pow(delta, 2) * p.getComponentForce(positions, Planet.Component.Y)) / p.getMass();
 
-        double newXSpeed = p.getXSpeed() + delta * p.getComponentForce(positions, Planet.Component.X) / p.getMass();
-        double newYSpeed = p.getYSpeed() + delta * p.getComponentForce(positions, Planet.Component.Y) / p.getMass();
+        double XSpeed = (newX - p.getOldX()) / (2 * delta);
+        double YSpeed = (newY - p.getOldY()) / (2 * delta);
 
         p.setOldX(p.getX());
         p.setOldY(p.getY());
@@ -68,8 +70,8 @@ public class Simulation {
         p.setX(newX);
         p.setY(newY);
 
-        p.setXSpeed(newXSpeed);
-        p.setYSpeed(newYSpeed);
+        p.setXSpeed(XSpeed);
+        p.setYSpeed(YSpeed);
     }
 
     private boolean missionSuccess(){

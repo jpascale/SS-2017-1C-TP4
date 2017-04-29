@@ -13,11 +13,11 @@ public class Main {
 
     private static long runningTime = 63072000 ; // two years in seconds
 
-    private static double shipSpeed = 3000; // m/s
+    private static double shipSpeed = 4200; // m/s
     private static double groundSpeed = 7120;
 
-    private static long launchTime = 604800; //week in seconds
-//    private static long launchTime = 3600 * 24;
+//    private static long launchTime = 604800; //week in seconds
+    private static long launchTime = 3600 * 24;
 
     public static void main(String[] args) {
         Simulation s;
@@ -41,22 +41,33 @@ public class Main {
         planets.add(ship);
         setShipStartPosition(ship,earth,sun);
 
-        for (long t = 0; t <= runningTime; t += launchTime) {
-            System.out.println("Semana: " + t/launchTime);
-            planets.forEach((planet) -> evolvePlanet(planet, deltaTime, launchTime, planets));
-            setShipStartPosition(ship, earth, sun);
+//        for (long t = 0; t <= runningTime; t += launchTime) {
+//            System.out.println("Dia: " + t/launchTime);
+//            evolveSystem(deltaTime, launchTime, planets);
+//            //planets.forEach((planet) -> evolvePlanet(planet, deltaTime, launchTime, planets));
+//            setShipStartPosition(ship, earth, sun);
+//
+//            s = new Simulation(planets, runningTime, deltaTime, printTime);
+//
+//
+//            sa.setLaunchTime(t);
+//            sa = s.Simulate();
+//
+//            if ((t / launchTime) == 661) {
+//                sa.printStatistics();
+//                sa.printAnswer();
+//            }
+//
+//        }
 
-            s = new Simulation(planets, runningTime, deltaTime, printTime);
+        evolveSystem(deltaTime, 661*launchTime, planets);
+        setShipStartPosition(ship, earth, sun);
 
-            sa.setLaunchTime(t);
-            sa = s.Simulate();
+        s = new Simulation(planets, runningTime, deltaTime, printTime);
+        sa = s.Simulate();
 
-            if(sa.isSuccess()) {
-                sa.printStatistics();
-                sa.printAnswer();
-            }
-
-        }
+        sa.printStatistics();
+        sa.printAnswer();
 
         System.out.println("TERMINO");
     }
@@ -89,22 +100,15 @@ public class Main {
 
     }
 
-    private static void evolvePlanet(Planet p, long delta, long evolvingTime, ArrayList<Planet> planets) {
-        for (long t = 0; t <= evolvingTime; t += delta){
-            double newX = 2.0 * p.getX() - p.getOldX() + (Math.pow(delta, 2) * p.getComponentForce(planets, Planet.Component.X)) / p.getMass();
-            double newY = 2.0 * p.getY() - p.getOldY() + (Math.pow(delta, 2) * p.getComponentForce(planets, Planet.Component.Y)) / p.getMass();
+    private static void evolveSystem(long deltaTime, long launchTime, ArrayList<Planet> planets) {
+        for(long t = 0; t <= launchTime; t += deltaTime){
+            // Save previous positions
+            ArrayList<Planet> aux = new ArrayList<>();
+            planets.forEach((planet) -> aux.add(planet.clone()));
 
-            double newXSpeed = p.getXSpeed() + delta * p.getComponentForce(planets, Planet.Component.X) / p.getMass();
-            double newYSpeed = p.getYSpeed() + delta * p.getComponentForce(planets, Planet.Component.Y) / p.getMass();
-
-            p.setOldX(p.getX());
-            p.setOldY(p.getY());
-
-            p.setX(newX);
-            p.setY(newY);
-
-            p.setXSpeed(newXSpeed);
-            p.setYSpeed(newYSpeed);
+            for (Planet p : planets) {
+                Simulation.updatePosition(p, deltaTime, aux);
+            }
         }
 
     }
