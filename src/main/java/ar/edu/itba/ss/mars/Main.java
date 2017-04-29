@@ -11,10 +11,13 @@ public class Main {
     private static long deltaTime = 100; // seconds
     private static long printTime = 43200; // 12 hours in seconds
 
-    private static long runningTime = 47335428; // year and a half in seconds
+    private static long runningTime = 63072000 ; // two years in seconds
 
     private static double shipSpeed = 3000; // m/s
+    private static double groundSpeed = 7120;
+
     private static long launchTime = 604800; //week in seconds
+//    private static long launchTime = 3600 * 24;
 
     public static void main(String[] args) {
         Simulation s;
@@ -39,6 +42,7 @@ public class Main {
         setShipStartPosition(ship,earth,sun);
 
         for (long t = 0; t <= runningTime; t += launchTime) {
+            System.out.println("Semana: " + t/launchTime);
             planets.forEach((planet) -> evolvePlanet(planet, deltaTime, launchTime, planets));
             setShipStartPosition(ship, earth, sun);
 
@@ -47,8 +51,10 @@ public class Main {
             sa.setLaunchTime(t);
             sa = s.Simulate();
 
-            sa.printStatistics();
-            sa.printAnswer();
+            if(sa.isSuccess()) {
+                sa.printStatistics();
+                sa.printAnswer();
+            }
 
         }
 
@@ -65,12 +71,13 @@ public class Main {
 
     }
 
+    //TODO: CHECK
     private static void setShipStartPosition(Planet ship, Planet earth, Planet sun){
        double newX = earth.getX() - sun.getX() + (SpaceData.d + earth.getRadius()) * (earth.getX() - sun.getX()) / sun.getDistance(earth);
        double newY = earth.getY() - sun.getY() + (SpaceData.d + earth.getRadius()) * (earth.getY() - sun.getY()) / sun.getDistance(earth);
 
-       double speedX = (shipSpeed + earth.getXSpeed()) * (earth.getX() - sun.getX()) / sun.getDistance(earth);
-       double speedY = (shipSpeed + earth.getYSpeed()) * (earth.getY() - sun.getY()) / sun.getDistance(earth);
+       double speedX = ((shipSpeed + groundSpeed) * (earth.getX() - sun.getX()) / sun.getDistance(earth)) + earth.getXSpeed();
+       double speedY = ((shipSpeed + groundSpeed) * (earth.getY() - sun.getY()) / sun.getDistance(earth)) + earth.getYSpeed();
 
        ship.setX(newX);
        ship.setY(newY);

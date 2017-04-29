@@ -13,7 +13,7 @@ public class Simulation {
     private final long deltaTime;
     private final long printTime;
 
-    public Simulation(ArrayList<Planet> planets, long runningTime, long deltaTime, long printTime) {
+    Simulation(ArrayList<Planet> planets, long runningTime, long deltaTime, long printTime) {
         this.runningTime = runningTime;
         this.deltaTime = deltaTime;
         this.printTime = printTime;
@@ -22,13 +22,18 @@ public class Simulation {
     }
 
 
-    public SimulationAnswer Simulate() {
+    SimulationAnswer Simulate() {
         int printCont = 0;
+        double minDistance =  planets.get(MARS.ID).getDistance(planets.get(SHIP.ID));
 
         for (long t = 0; t < runningTime; t += deltaTime) {
             if (printTime * printCont <= t) {
                 sa.writeAnswer(planets, t);
                 printCont++;
+            }
+            double distance = planets.get(MARS.ID).getDistance(planets.get(SHIP.ID));
+            if(minDistance > distance){
+                minDistance = distance;
             }
 
             // Save previous positions
@@ -45,11 +50,12 @@ public class Simulation {
                 return sa;
             }
         }
+        System.out.println("MIN DISTANCE: " + minDistance);
 
         return sa;
     }
 
-    private void updatePosition(Planet p, double delta, ArrayList<Planet> positions) {
+    public void updatePosition(Planet p, double delta, ArrayList<Planet> positions) {
         double newX = 2.0 * p.getX() - p.getOldX() + (Math.pow(delta, 2) * p.getComponentForce(positions, Planet.Component.X)) / p.getMass();
         double newY = 2.0 * p.getY() - p.getOldY() + (Math.pow(delta, 2) * p.getComponentForce(positions, Planet.Component.Y)) / p.getMass();
 
