@@ -10,6 +10,7 @@ public class SimulationAnswer {
     private boolean success = false;
 
     private long arrivalTime;
+    private long launchTime;
 
     //Arriving speeds
     private double xSpeed;
@@ -26,16 +27,6 @@ public class SimulationAnswer {
                     append(p.getR()).append("\t").append(p.getG()).append("\t").append(p.getB()).append("\n");
         }
 
-    }
-
-    public void printAnswer(){
-        try {
-            FileWriter fw = new FileWriter("outMars.txt", true);
-            fw.write(sb.toString());
-            fw.close();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
     }
 
     public void writeArrivalSpeed(double xSpeed, double ySpeed){
@@ -60,11 +51,30 @@ public class SimulationAnswer {
         return arrivalTime;
     }
 
+    public void setLaunchTime(long launchTime) {
+        this.launchTime = launchTime;
+    }
+
     public void printStatistics() {
         StringBuilder sb = new StringBuilder();
 
+        if(isSuccess()) {
+            sb.append("Launch Time ").append(launchTime).append("\n");
+            sb.append("\t").append(getArrivalTime()).append("\n").append("\t").append(xSpeed).append("\t").append(ySpeed).append("\n");
+        }
+
         try {
             FileWriter fw = new FileWriter("statisticsMars.txt", true);
+            fw.write(sb.toString());
+            fw.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void printAnswer(){
+        try {
+            FileWriter fw = new FileWriter("outMars.txt", true);
             fw.write(sb.toString());
             fw.close();
         } catch (IOException e){

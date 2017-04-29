@@ -5,6 +5,7 @@ import ar.edu.itba.ss.mars.SpaceData.*;
 import ar.edu.itba.ss.mars.Planet.Component;
 
 public class Main {
+    private static SimulationAnswer sa = new SimulationAnswer();
 
     private static ArrayList<Planet> planets = new ArrayList<>();
     private static long deltaTime = 100; // seconds
@@ -31,16 +32,23 @@ public class Main {
         planets.add(sun);
         planets.add(earth);
         planets.add(mars);
-        planets.add(ship);
 
         planets.forEach(Main::setPreviousPos);
+
+        planets.add(ship);
+        setShipStartPosition(ship,earth,sun);
 
         for (long t = 0; t <= runningTime; t += launchTime) {
             planets.forEach((planet) -> evolvePlanet(planet, deltaTime, launchTime, planets));
             setShipStartPosition(ship, earth, sun);
 
             s = new Simulation(planets, runningTime, deltaTime, printTime);
-            s.Simulate();
+
+            sa.setLaunchTime(t);
+            sa = s.Simulate();
+
+            sa.printStatistics();
+            sa.printAnswer();
 
         }
 
@@ -69,6 +77,8 @@ public class Main {
 
        ship.setXSpeed(speedX);
        ship.setYSpeed(speedY);
+
+       setPreviousPos(ship);
 
     }
 
