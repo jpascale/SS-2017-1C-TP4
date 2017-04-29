@@ -73,12 +73,12 @@ public class Main {
     }
 
     private static Double eulerPos(double pos, double speed, double force, double mass, double delta){
-        return pos + delta * speed - (Math.pow(delta,2) * force) / (2.0 * mass);
+        return pos + delta * speed + (Math.pow(delta,2) * force) / (2.0 * mass);
     }
 
     private static void setPreviousPos(Planet p) {
-        p.setOldX(eulerPos(p.getX(), p.getXSpeed(), p.getComponentForce(planets, Component.X), p.getMass(), -deltaTime));
-        p.setOldY(eulerPos(p.getY(), p.getYSpeed(), p.getComponentForce(planets, Component.Y), p.getMass(), -deltaTime));
+        p.setOldX(eulerPos(p.getX(), p.getXSpeed(), 0.0, p.getMass(), -deltaTime));
+        p.setOldY(eulerPos(p.getY(), p.getYSpeed(), 0.0, p.getMass(), -deltaTime));
 
     }
 
@@ -96,7 +96,8 @@ public class Main {
        ship.setXSpeed(speedX);
        ship.setYSpeed(speedY);
 
-       setPreviousPos(ship);
+        ship.setOldX(eulerPos(ship.getX(), ship.getXSpeed(), ship.getComponentForce(planets, Component.X), ship.getMass(), -deltaTime));
+        ship.setOldY(eulerPos(ship.getY(), ship.getYSpeed(), ship.getComponentForce(planets, Component.Y), ship.getMass(), -deltaTime));
 
     }
 
