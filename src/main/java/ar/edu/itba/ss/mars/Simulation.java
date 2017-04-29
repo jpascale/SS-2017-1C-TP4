@@ -32,7 +32,7 @@ public class Simulation {
                 printCont++;
             }
             double distance = planets.get(MARS.ID).getDistance(planets.get(SHIP.ID));
-            if(minDistance > distance){
+            if (minDistance > distance){
                 minDistance = distance;
             }
 
@@ -43,7 +43,7 @@ public class Simulation {
             for (Planet p : planets) {
                 updatePosition(p, deltaTime, aux);
             }
-            if(missionSuccess()){
+            if (missionSuccess(planets.get(SHIP.ID), planets.get(MARS.ID))){
                 sa.writeArrivalSpeed(planets.get(SHIP.ID).getXSpeed(), planets.get(SHIP.ID).getYSpeed());
                 sa.writeArrivalTime(t);
                 sa.writeSuccess();
@@ -74,11 +74,9 @@ public class Simulation {
         p.setYSpeed(YSpeed);
     }
 
-    private boolean missionSuccess(){
-        Planet ship = planets.get(SHIP.ID);
-        Planet mars = planets.get(MARS.ID);
-
-        return ship.getDistance(mars) <= MARS.RADIUS + SpaceData.d;
+    private boolean missionSuccess(Planet ship, Planet mars){
+        System.out.println("CURRENT DISTANCE " + ship.getDistance(mars ) + " - GOAL DISTANCE " + (MARS.RADIUS + SpaceData.d + SHIP.RADIUS));
+        return ship.getDistance(mars) <= MARS.RADIUS + SpaceData.d + SHIP.RADIUS;
     }
 
 }

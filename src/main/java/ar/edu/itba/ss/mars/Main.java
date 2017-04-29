@@ -13,7 +13,7 @@ public class Main {
 
     private static long runningTime = 63072000 ; // two years in seconds
 
-    private static double shipSpeed = 4200; // m/s
+    private static double shipSpeed = 4200; // 4.2 km/s -> m/s
     private static double groundSpeed = 7120;
 
 //    private static long launchTime = 604800; //week in seconds
