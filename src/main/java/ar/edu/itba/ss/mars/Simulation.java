@@ -2,6 +2,7 @@ package ar.edu.itba.ss.mars;
 
 
 import java.util.ArrayList;
+import ar.edu.itba.ss.mars.SpaceData.*;
 
 public class Simulation {
 
@@ -58,6 +59,13 @@ public class Simulation {
         p.setYSpeed(newYSpeed);
 
 
+    }
+
+    private boolean hasReachedMars(){
+        Planet ship = planets.get(SHIP.ID);
+        Planet mars = planets.get(MARS.ID);
+
+        return ship.getDistance(mars) <= MARS.RADIUS + SpaceData.d;
     }
 
 }

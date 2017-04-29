@@ -20,6 +20,10 @@ public class Oscillator {
 
     private static Particle p;
 
+    public static void main(String[] args) {
+        Oscillator.Simulate("Simulation.txt",Type.GEARPREDICTOR,0.001);
+        Output.animateOscillator("Animation.txt","Simulation.txt", 0.01, 5);
+    }
 
     private Oscillator(double time){
         p = new Particle(0, 1.0, mass, x0, v0);
