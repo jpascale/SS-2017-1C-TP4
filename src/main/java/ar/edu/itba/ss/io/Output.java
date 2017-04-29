@@ -12,9 +12,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Created by maggie on 4/22/17.
- */
 public class Output {
 
     public static void printOscillator(String filename, double x, double time) {
@@ -45,27 +42,6 @@ public class Output {
                 }
             }
         }catch (IOException e){
-            e.printStackTrace();
-        }
-
-    }
-
-    private static double [] radius = {SpaceData.SUN.RADIUS * 100 , SpaceData.EARTH.RADIUS * 1000, SpaceData.MARS.RADIUS * 1000};
-
-
-    public static void printSystem(List<Planet> particles, double t) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\t" + particles.size() + "\n");
-        sb.append("\t" + t/86400 + "\n");
-        for(Planet p: particles){
-            sb.append("\t" + p.getId() + "\t" + p.getX() + "\t" + p.getY() + "\t" + radius[p.getId()]  + "\t" + p.getR() + "\t" + p.getG() + "\t" + p.getB() + "\n");
-        }
-
-        try {
-            FileWriter fw = new FileWriter("outMars.txt", true);
-            fw.write(sb.toString());
-            fw.close();
-        } catch (IOException e){
             e.printStackTrace();
         }
 

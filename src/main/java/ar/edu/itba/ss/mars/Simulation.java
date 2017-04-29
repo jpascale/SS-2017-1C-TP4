@@ -21,7 +21,8 @@ public class Simulation {
         planets.forEach((planet) -> this.planets.add(planet.clone()));
     }
 
-    public void Simulate() {
+
+    public SimulationAnswer Simulate() {
         int printCont = 0;
 
         for (long t = 0; t < runningTime; t += deltaTime) {
@@ -37,9 +38,15 @@ public class Simulation {
             for (Planet p : planets) {
                 updatePosition(p, deltaTime, aux);
             }
+            if(missionSuccess()){
+                sa.writeArrivalSpeed(planets.get(SHIP.ID).getXSpeed(), planets.get(SHIP.ID).getYSpeed());
+                sa.writeArrivalTime(t);
+                sa.writeSuccess();
+                return sa;
+            }
         }
 
-        sa.printAnswer();
+        return sa;
     }
 
     private void updatePosition(Planet p, double delta, ArrayList<Planet> positions) {
@@ -57,11 +64,9 @@ public class Simulation {
 
         p.setXSpeed(newXSpeed);
         p.setYSpeed(newYSpeed);
-
-
     }
 
-    private boolean hasReachedMars(){
+    private boolean missionSuccess(){
         Planet ship = planets.get(SHIP.ID);
         Planet mars = planets.get(MARS.ID);
 

@@ -26,7 +26,7 @@ public class Oscillator {
     }
 
     private Oscillator(double time){
-        p = new Particle(0, 1.0, mass, x0, v0);
+        p = new Particle(0, mass, x0, v0);
         p.setXAcc(getAcel(p.getX(), p.getXSpeed()));
         Oscillator.time = time;
     }
@@ -34,7 +34,7 @@ public class Oscillator {
      static void Simulate(String filename, Type type, double deltaTime){
         Oscillator o = new Oscillator(5.0);
 
-        Particle previous = new Particle(1,1.0, mass, o.eulerPos(p, -deltaTime), o.eulerVel(p, -deltaTime));
+        Particle previous = new Particle(1, mass, o.eulerPos(p, -deltaTime), o.eulerVel(p, -deltaTime));
         p.setOldXPos(previous.getX());
         p.setOldXAcc(o.getAcel(previous.getX(), previous.getXSpeed()));
 
@@ -55,12 +55,12 @@ public class Oscillator {
 
     }
 
-    private double getForce(double x, double xspeed){
-        return -k * x - gamma * xspeed;
+    private double getForce(double x, double xSpeed){
+        return -k * x - gamma * xSpeed;
     }
 
-    private double getAcel(double x, double xspeed) {
-        return getForce(x, xspeed) / mass;
+    private double getAcel(double x, double xSpeed) {
+        return getForce(x, xSpeed) / mass;
     }
 
     private double eulerPos(Particle p, double delta){

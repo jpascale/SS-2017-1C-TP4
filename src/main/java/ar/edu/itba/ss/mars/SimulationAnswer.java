@@ -7,6 +7,13 @@ import java.util.ArrayList;
 public class SimulationAnswer {
 
     private StringBuilder sb = new StringBuilder();
+    private boolean success = false;
+
+    private long arrivalTime;
+
+    //Arriving speeds
+    private double xSpeed;
+    private double ySpeed;
 
     private static double[] radius = {SpaceData.SUN.RADIUS * 10, SpaceData.EARTH.RADIUS * 1000, SpaceData.MARS.RADIUS * 1000, SpaceData.SHIP.RADIUS * 1000000};
 
@@ -23,7 +30,41 @@ public class SimulationAnswer {
 
     public void printAnswer(){
         try {
-            FileWriter fw = new FileWriter("outMars.txt");
+            FileWriter fw = new FileWriter("outMars.txt", true);
+            fw.write(sb.toString());
+            fw.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void writeArrivalSpeed(double xSpeed, double ySpeed){
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+
+    }
+
+    public void writeSuccess(){
+        this.success = true;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void writeArrivalTime(long arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    public long getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void printStatistics() {
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            FileWriter fw = new FileWriter("statisticsMars.txt", true);
             fw.write(sb.toString());
             fw.close();
         } catch (IOException e){

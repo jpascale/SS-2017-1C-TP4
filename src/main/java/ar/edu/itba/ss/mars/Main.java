@@ -1,26 +1,23 @@
 package ar.edu.itba.ss.mars;
 
-import ar.edu.itba.ss.io.Output;
-import ar.edu.itba.ss.oscilator.Particle;
-
 import java.util.ArrayList;
 import ar.edu.itba.ss.mars.SpaceData.*;
 import ar.edu.itba.ss.mars.Planet.Component;
 
 public class Main {
-    private static Simulation s;
 
     private static ArrayList<Planet> planets = new ArrayList<>();
     private static long deltaTime = 100; // seconds
     private static long printTime = 43200; // 12 hours in seconds
 
-    private static long time = 31536000; // year in seconds
+    private static long runningTime = 47335428; // year and a half in seconds
 
     private static double shipSpeed = 3000; // m/s
     private static long launchTime = 604800; //week in seconds
 
-
     public static void main(String[] args) {
+        Simulation s;
+
         Planet sun = new Planet(SUN.ID, SUN.RADIUS, SUN.MASS, SUN.X, SUN.Y, SUN.VX, SUN.VY);
         Planet earth = new Planet(EARTH.ID, EARTH.RADIUS, EARTH.MASS, EARTH.X, EARTH.Y, EARTH.VX, EARTH.VY);
         Planet mars = new Planet(MARS.ID, MARS.RADIUS, MARS.MASS, MARS.X, MARS.Y, MARS.VX, MARS.VY);
@@ -31,8 +28,6 @@ public class Main {
         mars.setColor(MARS.R, MARS.G, MARS.B);
         ship.setColor(SHIP.R, SHIP.G, SHIP.B);
 
-        setShipStartPosition(ship, earth, sun);
-
         planets.add(sun);
         planets.add(earth);
         planets.add(mars);
@@ -40,8 +35,14 @@ public class Main {
 
         planets.forEach(Main::setPreviousPos);
 
-        s = new Simulation(planets, time, deltaTime, printTime);
-        s.Simulate();
+        for (long t = 0; t <= runningTime; t += launchTime) {
+            planets.forEach((planet) -> evolvePlanet(planet, deltaTime, launchTime, planets));
+            setShipStartPosition(ship, earth, sun);
+
+            s = new Simulation(planets, runningTime, deltaTime, printTime);
+            s.Simulate();
+
+        }
 
         System.out.println("TERMINO");
     }
@@ -68,6 +69,26 @@ public class Main {
 
        ship.setXSpeed(speedX);
        ship.setYSpeed(speedY);
+
+    }
+
+    private static void evolvePlanet(Planet p, long delta, long evolvingTime, ArrayList<Planet> planets) {
+        for (long t = 0; t <= evolvingTime; t += delta){
+            double newX = 2.0 * p.getX() - p.getOldX() + (Math.pow(delta, 2) * p.getComponentForce(planets, Planet.Component.X)) / p.getMass();
+            double newY = 2.0 * p.getY() - p.getOldY() + (Math.pow(delta, 2) * p.getComponentForce(planets, Planet.Component.Y)) / p.getMass();
+
+            double newXSpeed = p.getXSpeed() + delta * p.getComponentForce(planets, Planet.Component.X) / p.getMass();
+            double newYSpeed = p.getYSpeed() + delta * p.getComponentForce(planets, Planet.Component.Y) / p.getMass();
+
+            p.setOldX(p.getX());
+            p.setOldY(p.getY());
+
+            p.setX(newX);
+            p.setY(newY);
+
+            p.setXSpeed(newXSpeed);
+            p.setYSpeed(newYSpeed);
+        }
 
     }
 
