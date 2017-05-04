@@ -34,14 +34,17 @@ public class Planet {
         this.y_speed = y_speed;
     }
 
-    //TODO: test
-    public Double getComponentForce (ArrayList<Planet> planetList, Component component) {
+    public Planet(int id, double radius, double mass) {
+        this.id = id;
+        this.radius = radius;
+        this.mass = mass;
+    }
 
+    Double getComponentForce (ArrayList<Planet> planetList, Component component) {
         double c1 = 0.0;
         double c2 = 0.0;
 
         double sum = 0.0;
-
         for (Planet p : planetList) {
             if (!p.equals(this)) {
                 switch (component) {
@@ -55,16 +58,12 @@ public class Planet {
                         c2 = p.getY();
                         break;
                 }
-
                 double force = getGravityForce(p);
                 double e = (c2 - c1) / Math.abs(getDistance(p));
                 sum += force * e;
-                
             }
         }
-
         return sum;
-
     }
 
     /**
@@ -72,13 +71,26 @@ public class Planet {
      * @param p The planet
      * @return The gravity force
      */
-    public Double getGravityForce(Planet p){
+    private Double getGravityForce(Planet p){
         return (SpaceData.G * this.getMass() * p.getMass()) / Math.pow(getDistance(p), 2);
     }
 
 
-    public Double getDistance(Planet p){
+    Double getDistance(Planet p){
         return Math.sqrt(Math.pow(p.getX() - this.getX(), 2) + Math.pow(p.getY() - this.getY(), 2));
+    }
+
+    /**
+     * Generates a deep copy of the planet
+     * @return The planet copy
+     */
+    public Planet clone(){
+        Planet newPlanet = new Planet(id, radius, mass, x_pos, y_pos, x_speed, y_speed);
+        newPlanet.setOldX(old_x_pos);
+        newPlanet.setOldY(old_y_pos);
+        newPlanet.setColor(R, G, B);
+
+        return newPlanet;
     }
 
     public Integer getId() {
