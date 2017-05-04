@@ -1,6 +1,7 @@
 package ar.edu.itba.ss.mars;
 
 import java.util.ArrayList;
+
 import ar.edu.itba.ss.mars.SpaceData.*;
 import ar.edu.itba.ss.mars.Planet.Component;
 
@@ -13,11 +14,10 @@ public class Main {
 
     private static long runningTime = 63072000 ; // two years in seconds
 
-    private static double shipSpeed = 4200; // 4.2 km/s -> m/s
+    private static double shipSpeed = 8000; // 4.2 km/s -> m/s
     private static double groundSpeed = 7120;
 
-//    private static long launchTime = 604800; //week in seconds
-    private static long launchTime = 3600 * 24;
+    public static long launchTime = 3600 * 24;
 
     public static void main(String[] args) {
         Simulation s;
@@ -26,11 +26,6 @@ public class Main {
         Planet earth = new Planet(EARTH.ID, EARTH.RADIUS, EARTH.MASS, EARTH.X, EARTH.Y, EARTH.VX, EARTH.VY);
         Planet mars = new Planet(MARS.ID, MARS.RADIUS, MARS.MASS, MARS.X, MARS.Y, MARS.VX, MARS.VY);
         Planet ship = new Planet(SHIP.ID, SHIP.RADIUS, SHIP.MASS);
-
-        sun.setColor(SUN.R, SUN.G, SUN.B);
-        earth.setColor(EARTH.R, EARTH.G, EARTH.B);
-        mars.setColor(MARS.R, MARS.G, MARS.B);
-        ship.setColor(SHIP.R, SHIP.G, SHIP.B);
 
         planets.add(sun);
         planets.add(earth);
@@ -44,13 +39,10 @@ public class Main {
 //        for (long t = 0; t <= runningTime; t += launchTime) {
 //            System.out.println("Dia: " + t/launchTime);
 //            evolveSystem(deltaTime, launchTime, planets);
-//            //planets.forEach((planet) -> evolvePlanet(planet, deltaTime, launchTime, planets));
 //            setShipStartPosition(ship, earth, sun);
 //
 //            s = new Simulation(planets, runningTime, deltaTime, printTime);
 //
-//
-//            sa.setLaunchTime(t);
 //            sa = s.Simulate();
 //
 //            if ((t / launchTime) == 661) {
@@ -60,13 +52,12 @@ public class Main {
 //
 //        }
 
-        evolveSystem(deltaTime, 661*launchTime, planets);
+        evolveSystem(deltaTime, 663* launchTime, planets);
         setShipStartPosition(ship, earth, sun);
 
         s = new Simulation(planets, runningTime, deltaTime, printTime);
-        sa = s.Simulate();
 
-        sa.printStatistics();
+        sa = s.Simulate();
         sa.printAnswer();
 
         System.out.println("TERMINO");

@@ -9,11 +9,11 @@ public class Simulation {
     private final ArrayList<Planet> planets = new ArrayList<>();
     private final SimulationAnswer sa = new SimulationAnswer();
 
-    private final long runningTime;
-    private final long deltaTime;
+    private final double runningTime;
+    private final double deltaTime;
     private final long printTime;
 
-    Simulation(ArrayList<Planet> planets, long runningTime, long deltaTime, long printTime) {
+    Simulation(ArrayList<Planet> planets, double runningTime, long deltaTime, long printTime) {
         this.runningTime = runningTime;
         this.deltaTime = deltaTime;
         this.printTime = printTime;
@@ -23,17 +23,24 @@ public class Simulation {
 
 
     SimulationAnswer Simulate() {
+        double minDistance = planets.get(MARS.ID).getDistance(planets.get(SHIP.ID));
+        double taux = 0;
+        double minvx = 0 , minvy = 0;
         int printCont = 0;
-        double minDistance =  planets.get(MARS.ID).getDistance(planets.get(SHIP.ID));
 
-        for (long t = 0; t < runningTime; t += deltaTime) {
+        for (double t = 0; t < runningTime; t += deltaTime) {
+//            System.out.println("DIA: " + t);
+//            System.out.println("VELOCIDAD  ( " + (planets.get(SHIP.ID).getXSpeed() - planets.get(MARS.ID).getXSpeed()) + " , " +  (planets.get(SHIP.ID).getYSpeed() - planets.get(MARS.ID).getYSpeed()) + " )");
             if (printTime * printCont <= t) {
                 sa.writeAnswer(planets, t);
                 printCont++;
             }
             double distance = planets.get(MARS.ID).getDistance(planets.get(SHIP.ID));
-            if (minDistance > distance){
+            if(minDistance > distance){
+                taux = t;
                 minDistance = distance;
+                minvx = (planets.get(SHIP.ID).getXSpeed() - planets.get(MARS.ID).getXSpeed());
+                minvy = (planets.get(SHIP.ID).getYSpeed() - planets.get(MARS.ID).getYSpeed());
             }
 
             // Save previous positions
@@ -43,17 +50,9 @@ public class Simulation {
             for (Planet p : planets) {
                 updatePosition(p, deltaTime, aux);
             }
-            if (missionSuccess(planets.get(SHIP.ID), planets.get(MARS.ID))){
-                sa.writeArrivalSpeed(planets.get(SHIP.ID).getXSpeed(), planets.get(SHIP.ID).getYSpeed());
-                sa.writeArrivalTime(t);
-                sa.writeSuccess();
-                System.out.println("LLEGO!!!");
-                System.out.println("MIN DISTANCE: " + minDistance);
-                return sa;
-            }
         }
-        System.out.println("MIN DISTANCE: " + minDistance);
-
+        System.out.println("MINDISTANCE " + minDistance + " TIEMPO " + (int)(taux/Main.launchTime) + " dias");
+        System.out.println("Velocidad en t min: " + Math.sqrt(Math.pow(minvx, 2) + Math.pow(minvy, 2)));
         return sa;
     }
 
@@ -75,7 +74,6 @@ public class Simulation {
     }
 
     private boolean missionSuccess(Planet ship, Planet mars){
-        System.out.println("CURRENT DISTANCE " + ship.getDistance(mars ) + " - GOAL DISTANCE " + (MARS.RADIUS + SpaceData.d + SHIP.RADIUS));
         return ship.getDistance(mars) <= MARS.RADIUS + SpaceData.d + SHIP.RADIUS;
     }
 

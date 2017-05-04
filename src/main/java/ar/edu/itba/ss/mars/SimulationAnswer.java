@@ -16,15 +16,15 @@ public class SimulationAnswer {
     private double xSpeed;
     private double ySpeed;
 
-    private static double[] radius = {SpaceData.SUN.RADIUS * 10, SpaceData.EARTH.RADIUS * 1000, SpaceData.MARS.RADIUS * 1000, SpaceData.SHIP.RADIUS * 1000000};
+   // private static double[] radius = {SpaceData.SUN.RADIUS * 10, SpaceData.EARTH.RADIUS * 1000, SpaceData.MARS.RADIUS * 1000, SpaceData.SHIP.RADIUS * 1000000};
 
-    public void writeAnswer(ArrayList<Planet> planets, long t){
+    public void writeAnswer(ArrayList<Planet> planets, double t){
         sb.append("\t").append(planets.size()).append("\n");
-        sb.append("\t").append(t / 86400).append("\n");
+        sb.append("\t").append(t / 43200).append("\n");
 
         for(Planet p: planets){
-            sb.append("\t").append(p.getId()).append("\t").append(p.getX()).append("\t").append(p.getY()).append("\t").append(radius[p.getId()]).append("\t").
-                    append(p.getR()).append("\t").append(p.getG()).append("\t").append(p.getB()).append("\n");
+            sb.append("\t").append(p.getId()).append("\t").append(p.getX()).append("\t").append(p.getY()).append("\t").append(p.getRadius()).append("\t").
+                    append(p.getR()).append("\t").append(p.getG()).append("\t").append(p.getB()).append("\t").append(1).append("\n");
         }
 
     }

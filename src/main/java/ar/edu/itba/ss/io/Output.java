@@ -16,7 +16,7 @@ public class Output {
 
     public static void printOscillator(String filename, double x, double time) {
         StringBuilder sb = new StringBuilder();
-        sb.append(time + " " + x + "\n");
+        sb.append(time + "\t" + x + "\n");
         try {
             FileWriter fw = new FileWriter(filename, true);
             fw.write(sb.toString());
@@ -27,23 +27,5 @@ public class Output {
 
     }
 
-    public static void animateOscillator(String outputFile, String inputFile, double printTime,double totalTime) {
-        double print = 0.0;
-        File f = new File(inputFile);
-        try{
-            Scanner scanner = new Scanner(f);
-            while(print + printTime < totalTime){
-                String [] s = scanner.nextLine().split("\\s+");
-                double t = Double.parseDouble(s[0]);
-                double pos = Double.parseDouble(s[1]);
-                if (print <= t) {
-                    printOscillator(outputFile,pos,t);
-                    print += printTime;
-                }
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
 
-    }
 }

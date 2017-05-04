@@ -15,36 +15,39 @@ public class Oscillator {
 
     private static double time;
 
-    private static double x0 = 1.0;
     private static double v0 = -gamma / (2 * mass);
 
     private static Particle p;
 
     public static void main(String[] args) {
-        Oscillator.Simulate("Simulation.txt",Type.GEARPREDICTOR,0.001);
-        Output.animateOscillator("Animation.txt","Simulation.txt", 0.01, 5);
+        Oscillator.Simulate("Simulation.txt",Type.VERLET,0.001);
+        //Output.animateOscillator("Animation.txt","Simulation.txt", 0.01, 5);
     }
 
     private Oscillator(double time){
-        p = new Particle(0, mass, x0, v0);
+        p = new Particle(0, mass, 1.0, v0);
         p.setXAcc(getAcel(p.getX(), p.getXSpeed()));
         Oscillator.time = time;
     }
 
-     static void Simulate(String filename, Type type, double deltaTime){
+     private static void Simulate(String filename, Type type, double deltaTime){
         Oscillator o = new Oscillator(5.0);
 
         Particle previous = new Particle(1, mass, o.eulerPos(p, -deltaTime), o.eulerVel(p, -deltaTime));
-        p.setOldXPos(previous.getX());
         p.setOldXAcc(o.getAcel(previous.getX(), previous.getXSpeed()));
 
         double diff = 0.0;
         int count = 0;
+        double printCont = 0.0;
 
         for(double t=0.0;t<time;t+=deltaTime){
+            if (0.01 * printCont <= t) {
+                Output.printOscillator(filename, p.getX(),t);
+                printCont ++;
+            }
             diff += Math.pow(p.getX() - o.exactSol(t),2);
 
-            Output.printOscillator(filename, p.getX(),t);
+
 
             o.update(type, deltaTime);
             count ++;
@@ -93,14 +96,15 @@ public class Oscillator {
     }
 
     private void Verlet(double delta){
-        double nextX = p.getX() + delta * p.getXSpeed() + (delta*delta*getForce(p.getX(), p.getXSpeed()) / p.getMass());
+        double nextX = p.getX() + delta * p.getXSpeed() + (delta * delta * getForce(p.getX(), p.getXSpeed()) / p.getMass());
 
         double predXSpeed = eulerVel(p, delta);
 
-        double nextSpeedX = p.getXSpeed() + (delta / (2 * p.getMass())) * (getForce(p.getX(), p.getXSpeed()) + getForce(nextX, predXSpeed)) ;
+        double halfSpeed = p.getX() + p.getXAcc() * (delta / 2.0);
 
-        p.setOldXPos(p.getX());
-        p.setOldXAcc(p.getXAcc());
+        double aux = halfSpeed + getAcel(nextX, predXSpeed) * (delta / 2.0);
+
+        double nextSpeedX = p.getXSpeed() + (delta / (2 * p.getMass())) * (getForce(p.getX(), p.getXSpeed()) + getForce(nextX, aux));
 
         p.setX(nextX);
         p.setXSpeed(nextSpeedX);
@@ -116,9 +120,8 @@ public class Oscillator {
 
         double xAcc = getAcel(newX, predXSpeed);
 
-        double newXSpeed = p.getXSpeed() + (1.0 / 3.0)* xAcc * delta + (5.0 / 6.0) * p.getXAcc() * delta - (1.0 / 6.0) * p.getOldXAcc() * delta;
+        double newXSpeed = p.getXSpeed() + (1.0 / 3.0) * xAcc * delta + (5.0 / 6.0) * p.getXAcc() * delta - (1.0 / 6.0) * p.getOldXAcc() * delta;
 
-        p.setOldXPos(p.getX());
         p.setOldXAcc(p.getXAcc());
 
         p.setX(newX);
@@ -145,8 +148,10 @@ public class Oscillator {
         rc.put(5, getAcel(rc.get(3), rc.get(4)));
 
         //Predict
-        rp.put(0, rc.get(0) + rc.get(1)* delta + rc.get(2) * (Math.pow(delta, 2) / 2.0) + rc.get(3) * (Math.pow(delta, 3) / 6.0) + rc.get(4) * (Math.pow(delta, 4) / 24.0) + rc.get(5) * (Math.pow(delta, 5) / 120.0));
-        rp.put(1, rc.get(1) + rc.get(2)* delta + rc.get(3) * (Math.pow(delta, 2) / 2.0) + rc.get(4) * (Math.pow(delta, 3) / 6.0) + rc.get(5) * (Math.pow(delta, 4) / 24.0));
+        rp.put(0, rc.get(0) + rc.get(1)* delta + rc.get(2) * (Math.pow(delta, 2) / 2.0) + rc.get(3) * (Math.pow(delta, 3) / 6.0) +
+                rc.get(4) * (Math.pow(delta, 4) / 24.0) + rc.get(5) * (Math.pow(delta, 5) / 120.0));
+        rp.put(1, rc.get(1) + rc.get(2)* delta + rc.get(3) * (Math.pow(delta, 2) / 2.0) + rc.get(4) * (Math.pow(delta, 3) / 6.0) +
+                rc.get(5) * (Math.pow(delta, 4) / 24.0));
         rp.put(2, rc.get(2) + rc.get(3)* delta + rc.get(4) * (Math.pow(delta, 3) / 2.0) + rc.get(5) * (Math.pow(delta, 4) / 6.0));
         rp.put(3, rc.get(3) + rc.get(4)* delta + rc.get(5) * (Math.pow(delta, 3) / 2.0));
         rp.put(4, rc.get(4) + rc.get(5)* delta);

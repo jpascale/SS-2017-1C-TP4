@@ -10,8 +10,6 @@ public class Particle {
 
     private double mass = 0.0;
 
-    private double old_x_pos = 0.0;
-
     private double old_x_acc = 0.0;
 
     private double x_pos = 0.0;
@@ -66,8 +64,6 @@ public class Particle {
     public void setXSpeed(Double x_speed) {
         this.x_speed = x_speed;
     }
-
-    public void setOldXPos(double old_x_pos) {this.old_x_pos = old_x_pos;}
 
     public void setOldXAcc(double old_x_acc) {this.old_x_acc = old_x_acc;}
 
